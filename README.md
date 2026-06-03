@@ -1,4 +1,3 @@
-# Analysis-of-Algorithm-Project
 # C++ Fast Fourier Transform (FFT) Implementation
 
 This repository contains a C++ implementation of the Fast Fourier Transform (FFT) algorithm. The FFT is an efficient algorithm to compute the Discrete Fourier Transform (DFT) and its inverse. This implementation uses a recursive approach, commonly known as the Cooley-Tukey algorithm.
