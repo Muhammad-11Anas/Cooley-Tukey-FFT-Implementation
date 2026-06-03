@@ -1,114 +1,202 @@
-# C++ Fast Fourier Transform (FFT) Implementation
+# Cooley-Tukey FFT Implementation
 
-This repository contains a C++ implementation of the Fast Fourier Transform (FFT) algorithm. The FFT is an efficient algorithm to compute the Discrete Fourier Transform (DFT) and its inverse. This implementation uses a recursive approach, commonly known as the Cooley-Tukey algorithm.
+A C++ implementation of the recursive **Cooley–Tukey Fast Fourier Transform (FFT)** algorithm. This project demonstrates how FFT efficiently computes the **Discrete Fourier Transform (DFT)** of complex-valued input signals using a divide-and-conquer strategy.
 
-## Description
+The implementation supports:
 
-The program takes a sequence of complex numbers as input (specifically, the number of samples must be a power of 2) and computes its FFT. The output is the frequency-domain representation of the input signal.
+* Recursive radix-2 FFT
+* Complex number operations
+* User input validation
+* Frequency-domain transformation of signals
+
+---
 
 ## Features
 
-* **Recursive FFT:** Implements the Cooley-Tukey FFT algorithm recursively.
-* **Complex Number Support:** Utilizes the `std::complex<double>` class for handling complex numbers.
-* **User Input:** Allows users to specify the number of samples and input the real and imaginary parts for each sample.
-* **Input Validation:** Checks if the number of samples is a positive power of 2, which is a requirement for this specific FFT implementation.
-* **Clear Output:** Displays the FFT results in a user-friendly complex number format (e.g., `a + bi` or `a - bi`).
+* Recursive Cooley–Tukey FFT algorithm
+* Complex number support
+* Power-of-two input validation
+* Interactive console input
+* Readable complex-number output
+* Educational implementation for algorithm analysis and learning
+
+---
+
+## Algorithm Overview
+
+The FFT reduces the time complexity of the Discrete Fourier Transform from:
+
+```text
+O(n²)
+```
+
+to:
+
+```text
+O(n log n)
+```
+
+using a divide-and-conquer approach.
+
+### Steps of the Algorithm
+
+1. Split the sequence into:
+
+   * Even-indexed elements
+   * Odd-indexed elements
+
+2. Recursively compute FFT on both halves
+
+3. Combine results using twiddle factors:
+
+```text
+X[k] = E[k] + W_n^k * O[k]
+
+X[k + n/2] = E[k] - W_n^k * O[k]
+```
+
+where:
+
+```text
+W_n^k = e^(-2πik / n)
+```
+
+---
+
+## Project Structure
+
+```text
+.
+├── main.cpp
+├── README.md
+```
+
+---
 
 ## Requirements
 
-* A C++ compiler that supports C++11 or later (for `std::complex`, `std::vector`, etc.). Examples include:
-    * GCC (g++)
-    * Clang
-    * MSVC (Visual Studio)
-* Standard C++ libraries:
-    * `<iostream>` for input/output operations.
-    * `<vector>` for dynamic arrays (`std::vector`).
-    * `<complex>` for complex number arithmetic (`std::complex`).
-    * `<cmath>` for mathematical functions like `polar` and `PI` constant (though `M_PI` is often preferred if available and more standard).
+* C++11 or later
+* GCC / Clang / MSVC
 
-## How to Compile and Run
+### Header Files Used
 
-1.  **Save the Code:** Save the C++ code into a file named `fft.cpp` (or any other `.cpp` file).
+```cpp
+#include <iostream>
+#include <vector>
+#include <complex>
+#include <cmath>
 
-2.  **Compile:** Open a terminal or command prompt and use a C++ compiler to compile the code. Here's an example using g++:
+using namespace std;
+```
 
-    ```bash
-    g++ fft.cpp -o fft_program -std=c++11
-    ```
+---
 
-    * `fft.cpp`: Your source code file.
-    * `-o fft_program`: Specifies the output executable file name as `fft_program`.
-    * `-std=c++11`: Ensures C++11 standard compatibility (or higher, like `-std=c++14`, `-std=c++17`).
+## Compilation
 
-3.  **Run:** Execute the compiled program:
+Compile using g++:
 
-    ```bash
-    ./fft_program
-    ```
+```bash
+g++ main.cpp -o fft_program -std=c++11
+```
 
-    On Windows, you might run it as:
+---
 
-    ```bash
-    fft_program.exe
-    ```
+## Running the Program
 
-## Usage
+### Linux/macOS
 
-When you run the program, it will prompt you to:
+```bash
+./fft_program
+```
 
-1.  **Enter the number of samples:** This number **must be a positive power of 2** (e.g., 2, 4, 8, 16, 32, ...).
-2.  **Enter the real and imaginary parts** for each sample.
+### Windows
 
-The program will then calculate and display the FFT of the input samples.
+```bash
+fft_program.exe
+```
 
-### Example Interaction
+---
 
+## Example Input
 
+```text
 Enter the number of samples (must be a power of 2): 4
-Enter the real and imaginary parts of the 4 samples:
+
 Sample 1 - Real: 1
 Sample 1 - Imaginary: 0
+
 Sample 2 - Real: 2
 Sample 2 - Imaginary: 0
+
 Sample 3 - Real: 3
 Sample 3 - Imaginary: 0
+
 Sample 4 - Real: 4
 Sample 4 - Imaginary: 0
+```
 
-FFT output (in frequency domain):
+---
+
+## Example Output
+
+```text
+FFT Output (Frequency Domain):
+
 10 + 0i
 -2 + 2i
 -2 + 0i
 -2 - 2i
+```
 
+---
 
-## Algorithm Explanation
+## Complexity Analysis
 
-The code implements the **Cooley-Tukey FFT algorithm**, which is a divide-and-conquer algorithm. Here's a high-level overview:
+| Operation        | Complexity |
+| ---------------- | ---------- |
+| Naive DFT        | O(n²)      |
+| Recursive FFT    | O(n log n) |
+| Space Complexity | O(n)       |
 
-1.  **Base Case:** If the input sequence has 0 or 1 sample, it's returned as is (its DFT is itself).
-2.  **Divide:** The input sequence `a` of size `n` is split into two sub-sequences:
-    * `even`: containing elements at even indices `a[0], a[2], ..., a[n-2]`.
-    * `odd`: containing elements at odd indices `a[1], a[3], ..., a[n-1]`.
-3.  **Conquer:** The FFT is recursively computed for both `even` and `odd` sub-sequences.
-4.  **Combine:** The results from the recursive calls are combined to produce the FFT of the original sequence. For `k` from `0` to `n/2 - 1`:
-    * $ A[k] = \text{FFT}_{\text{even}}[k] + \omega_n^k \cdot \text{FFT}_{\text{odd}}[k] $
-    * $ A[k + n/2] = \text{FFT}_{\text{even}}[k] - \omega_n^k \cdot \text{FFT}_{\text{odd}}[k] $
-    where $ \omega_n^k = e^{-2\pi i k / n} $ is the twiddle factor. The `polar(1.0, -2 * PI * k / n)` function in the code calculates this twiddle factor.
+---
 
-## Code Structure
+## Main Functions
 
-* **`fft(vector<complex<double>>& a)`:** The core recursive function that performs the Fast Fourier Transform.
-    * It splits the input vector into even and odd indexed elements.
-    * Recursively calls itself on these two halves.
-    * Combines the results using twiddle factors.
-* **`printComplex(const complex<double>& c)`:** A utility function to display complex numbers in a readable format (e.g., `real + imag i` or `real - imag i`).
-* **`main()`:**
-    * Handles user input for the number of samples and the sample values.
-    * Validates that the number of samples is a power of 2.
-    * Calls the `fft` function to perform the transformation.
-    * Prints the resulting frequency domain data using `printComplex`.
+| Function         | Description                              |
+| ---------------- | ---------------------------------------- |
+| `fft()`          | Performs recursive FFT computation       |
+| `printComplex()` | Displays formatted complex numbers       |
+| `main()`         | Handles input, validation, and execution |
 
-## License
+---
 
-Consider adding a license to your project, for example, the [MIT License](https://opensource.org/licenses/MIT). To do this, create a `LICENSE` file in your repository and add the license text to it.
+## Applications
+
+FFT is widely used in:
+
+* Digital Signal Processing (DSP)
+* Audio Processing
+* Image Processing
+* Wireless Communication
+* Spectral Analysis
+* Scientific Computing
+
+---
+
+## Future Improvements
+
+* Inverse FFT (IFFT)
+* Iterative FFT implementation
+* Performance benchmarking
+* FFT visualization
+* Unit testing
+* Polynomial multiplication using FFT
+
+---
+
+## Author
+
+### [Muhammad Anas](https://github.com/Muhammad-11Anas)
+
+Cooley–Tukey FFT Implementation in C++
+
